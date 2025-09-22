@@ -1,98 +1,211 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { ScrollView, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const colorScheme = useColorScheme(); // 'light' or 'dark'
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+  const themeStyles = StyleSheet.create({
+    section: {
+      marginBottom: 24,
+      padding: 16,
+      borderRadius: 12,
+      backgroundColor: colorScheme === 'light' ? '#E6F3FF' : '#1A3C5A',
+      shadowColor: colorScheme === 'light' ? '#000' : '#FFF',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4, // For Android shadows
+    },
+    button: {
+      backgroundColor: colorScheme === 'light' ? '#007AFF' : '#0A84FF',
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 12,
+    },
+    buttonText: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    card: {
+      backgroundColor: colorScheme === 'light' ? '#F0F8FF' : '#2C4A6B',
+      borderRadius: 12,
+      padding: 16,
+      marginTop: 12,
+    },
+  });
+
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={true}
+    >
+      {/* Hero Section */}
+      <LinearGradient
+        colors={colorScheme === 'light' ? ['#4DA8DA', '#007AFF'] : ['#1A3C5A', '#0A84FF']}
+        style={styles.heroSection}
+      >
+        <ThemedText type="title" style={styles.heroTitle}>
+          Water Monitoring Hub
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
+        <ThemedText type="default" style={styles.heroSubtitle}>
+          Track water quality and protect our planet’s vital resource in real time.
         </ThemedText>
+        <TouchableOpacity
+          style={themeStyles.button}
+          onPress={() => alert('Start Monitoring pressed!')}
+        >
+          <ThemedText style={themeStyles.buttonText}>Start Monitoring</ThemedText>
+        </TouchableOpacity>
+      </LinearGradient>
+
+      {/* Water Status Section */}
+      <ThemedView style={themeStyles.section}>
+        <ThemedText type="subtitle">Current Water Status</ThemedText>
+        <ThemedView style={themeStyles.card}>
+          <ThemedText type="defaultSemiBold">pH Level: 7.2</ThemedText>
+          <ThemedText type="default">Within safe range (6.5–8.5).</ThemedText>
+        </ThemedView>
+        <ThemedView style={themeStyles.card}>
+          <ThemedText type="defaultSemiBold">Turbidity: 1.5 NTU</ThemedText>
+          <ThemedText type="default">Clear water, safe for use.</ThemedText>
+        </ThemedView>
+        <ThemedView style={themeStyles.card}>
+          <ThemedText type="defaultSemiBold">Dissolved Oxygen: 6.8 mg/L</ThemedText>
+          <ThemedText type="default">Healthy for aquatic life.</ThemedText>
+        </ThemedView>
+        <Image
+          source={{ uri: 'https://via.placeholder.com/300x150/4DA8DA' }} // Replace with sensor image
+          style={styles.image}
+          contentFit="cover"
+        />
       </ThemedView>
-    </ParallaxScrollView>
+
+      {/* Features Section */}
+      <ThemedView style={themeStyles.section}>
+        <ThemedText type="subtitle">Why Choose Our App?</ThemedText>
+        <ThemedView style={themeStyles.card}>
+          <ThemedText type="defaultSemiBold">Real-Time Monitoring</ThemedText>
+          <ThemedText type="default">Get live updates from water sensors.</ThemedText>
+        </ThemedView>
+        <ThemedView style={themeStyles.card}>
+          <ThemedText type="defaultSemiBold">Smart Alerts</ThemedText>
+          <ThemedText type="default">Instant notifications for water quality issues.</ThemedText>
+        </ThemedView>
+        <ThemedView style={themeStyles.card}>
+          <ThemedText type="defaultSemiBold">Data Insights</ThemedText>
+          <ThemedText type="default">Analyze trends with historical data.</ThemedText>
+        </ThemedView>
+        <TouchableOpacity
+          style={themeStyles.button}
+          onPress={() => alert('Explore Features pressed!')}
+        >
+          <ThemedText style={themeStyles.buttonText}>Learn More</ThemedText>
+        </TouchableOpacity>
+      </ThemedView>
+
+      {/* Gallery Section */}
+      <ThemedView style={themeStyles.section}>
+        <ThemedText type="subtitle">Our Water Sources</ThemedText>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.gallery}>
+          <Image
+            source={{ uri: 'https://via.placeholder.com/150/4DA8DA' }} // Replace with water image
+            style={styles.galleryImage}
+            contentFit="cover"
+          />
+          <Image
+            source={{ uri: 'https://via.placeholder.com/150/007AFF' }} // Replace with sensor image
+            style={styles.galleryImage}
+            contentFit="cover"
+          />
+          <Image
+            source={{ uri: 'https://via.placeholder.com/150/34C759' }} // Replace with river image
+            style={styles.galleryImage}
+            contentFit="cover"
+          />
+        </ScrollView>
+      </ThemedView>
+
+      {/* Tips & Alerts Section */}
+      <ThemedView style={themeStyles.section}>
+        <ThemedText type="subtitle">Water Conservation Tips</ThemedText>
+        <ThemedText type="default">
+          - Fix leaks to save water.
+        </ThemedText>
+        <ThemedText type="default">
+          - Use water-efficient fixtures.
+        </ThemedText>
+        <ThemedText type="default">
+          - Monitor usage to reduce waste.
+        </ThemedText>
+        <Image
+          source={{ uri: 'https://via.placeholder.com/300x150/007AFF' }} // Replace with conservation image
+          style={styles.image}
+          contentFit="cover"
+        />
+      </ThemedView>
+
+      {/* Call to Action Section */}
+      <ThemedView style={themeStyles.section}>
+        <ThemedText type="subtitle">Get Started Today</ThemedText>
+        <ThemedText type="default">
+          Connect your water sensors and start monitoring. Customize this page by editing{' '}
+          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>.
+        </ThemedText>
+        <TouchableOpacity
+          style={themeStyles.button}
+          onPress={() => alert('Connect Now pressed!')}
+        >
+          <ThemedText style={themeStyles.buttonText}>Connect Now</ThemedText>
+        </TouchableOpacity>
+      </ThemedView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  scrollView: {
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 16,
+    paddingBottom: 48,
+  },
+  heroSection: {
+    padding: 32,
+    borderRadius: 16,
+    marginBottom: 24,
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  heroTitle: {
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  heroSubtitle: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  image: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  gallery: {
+    marginTop: 12,
+  },
+  galleryImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 8,
+    marginRight: 12,
   },
 });
